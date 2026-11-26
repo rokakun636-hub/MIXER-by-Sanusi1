@@ -125,7 +125,31 @@ if (user && eqPower) {
 
         addLabel(content, "SOUND EFFECTS")
 
-        addButton(content, "BASS BOOST")
+        addLabel(content, "BASS BOOST")
+
+val bassSlider = SeekBar(this).apply {
+    max = 100
+    progress = 0
+}
+
+bassSlider.setOnSeekBarChangeListener(
+    object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(
+            bar: SeekBar?,
+            value: Int,
+            user: Boolean
+        ) {
+            if (user && eqPower) {
+                audioEngine.setBass(value)
+            }
+        }
+
+        override fun onStartTrackingTouch(bar: SeekBar?) {}
+        override fun onStopTrackingTouch(bar: SeekBar?) {}
+    }
+)
+
+content.addView(bassSlider)
         addButton(content, "TREBLE")
         addButton(content, "VIRTUALIZER")
         addButton(content, "REVERB")
