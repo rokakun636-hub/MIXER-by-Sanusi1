@@ -152,3 +152,7 @@ class MainActivity : Activity() {
         parent.addView(button, params)
     }
 }
+
+private lateinit var audioEngine: AudioEngine
+private var eqPower = true
+
