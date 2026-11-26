@@ -74,6 +74,22 @@ class MainActivity : Activity() {
             seek.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(
+if (user && eqPower) {
+    val frequencies = intArrayOf(
+        31, 62, 125, 250, 500,
+        1000, 2000, 4000, 8000, 16000
+    )
+
+    val index = bands.indexOf(band)
+
+    if (index >= 0) {
+        audioEngine.setBandAtFrequency(
+            frequencies[index],
+            (value - 12) / 2
+        )
+    }
+}
+
                         bar: SeekBar?,
                         value: Int,
                         user: Boolean
