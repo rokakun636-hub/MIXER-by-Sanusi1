@@ -58,6 +58,37 @@ class AudioEngine {
             eq.setBandLevel(index.toShort(), level.toShort())
         } catch (_: Exception) {}
     }
+     
+fun setBandAtFrequency(freqHz: Int, db: Int) {
+    try {
+        val eq = equalizer ?: return
+        if (eq.numberOfBands == 0) return
+
+        var nearestBand: Short = 0
+        var smallestDifference = Long.MAX_VALUE
+
+        for (i in 0 until eq.numberOfBands) {
+            val center = eq.getCenterFreq(i.toShort()) / 1000
+            val difference = kotlin.math.abs(
+                center.toLong() - freqHz.toLong()
+            )
+
+            if (difference < smallestDifference) {
+                smallestDifference = difference
+                nearestBand = i.toShort()
+            }
+        }
+
+        val range = eq.bandLevelRange
+        val level = (db * 100).coerceIn(
+            range[0].toInt(),
+            range[1].toInt()
+        )
+
+        eq.setBandLevel(nearestBand, level.toShort())
+
+    } catch (_: Exception) {}
+}
 
     fun setBass(value: Int) {
         try {
