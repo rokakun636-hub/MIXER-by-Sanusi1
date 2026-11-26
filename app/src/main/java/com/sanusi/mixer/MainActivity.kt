@@ -195,15 +195,86 @@ content.addView(reverbSwitch)
 
         addLabel(content, "SOUND PRESETS")
 
-        addButton(content, "NORMAL")
-        addButton(content, "POP")
-        addButton(content, "ROCK")
-        addButton(content, "JAZZ")
-        addButton(content, "CLASSICAL")
-        addButton(content, "VOCAL")
-        addButton(content, "DANGDUT")
+        
+addPresetButton(content, "NORMAL",
+    intArrayOf(0,0,0,0,0,0,0,0,0,0))
 
-        addButton(content, "RESET EQUALIZER")
+addPresetButton(content, "POP",
+    intArrayOf(2,4,5,2,-1,-1,1,3,4,3))
+
+addPresetButton(content, "ROCK",
+    intArrayOf(4,3,-2,-3,1,3,5,5,4,4))
+
+addPresetButton(content, "JAZZ",
+    intArrayOf(3,2,1,2,-2,-2,0,2,3,4))
+
+addPresetButton(content, "CLASSICAL",
+    intArrayOf(4,3,2,1,-1,-1,0,2,3,4))
+
+addPresetButton(content, "VOCAL",
+    intArrayOf(-2,-1,0,2,4,4,3,2,1,0))
+
+addPresetButton(content, "DANGDUT",
+    intArrayOf(5,5,3,1,-1,1,3,4,4,3))
+
+
+        
+val resetButton = Button(this).apply {
+    text = "RESET EQUALIZER"
+    textSize = 15f
+    setTextColor(green)
+    setBackgroundColor(Color.rgb(35, 42, 38))
+
+    setOnClickListener {
+        if (eqPower) {
+            val frequencies = intArrayOf(
+                31, 62, 125, 250, 500,
+                1000, 2000, 4000, 8000, 16000
+            )
+
+            for (frequency in frequencies) {
+                audioEngine.setBandAtFrequency(
+                    frequency, 0
+                )
+            }
+
+            audioEngine.setBass(0)
+            audioEngine.setVirtualizer(0)
+            audioEngine.setReverb(false)
+
+            Toast.makeText(
+                this@MainActivity,
+                "Equalizer berhasil direset",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+private fun saveEQSettings(
+    key: String,
+    value: Int
+) {
+    getSharedPreferences(
+        "SanusiMixerSettings",
+        MODE_PRIVATE
+    ).edit()
+        .putInt(key, value)
+        .apply()
+}
+
+private fun loadEQSettings(
+    key: String,
+    defaultValue: Int = 0
+): Int {
+    return getSharedPreferences(
+        "SanusiMixerSettings",
+        MODE_PRIVATE
+    ).getInt(key, defaultValue)
+}
+}
+
+content.addView(resetButton)
+
 
         scroll.addView(content)
         root.addView(
@@ -246,6 +317,37 @@ content.addView(reverbSwitch)
         params.setMargins(0, 6, 0, 6)
         parent.addView(button, params)
     }
+
+private fun addPresetButton(
+    parent: LinearLayout,
+    name: String,
+    values: IntArray
+) {
+    val button = Button(this).apply {
+        text = name
+        textSize = 14f
+        setTextColor(green)
+        setBackgroundColor(Color.rgb(35, 42, 38))
+
+        setOnClickListener {
+            if (eqPower) {
+                val frequencies = intArrayOf(
+                    31, 62, 125, 250, 500,
+                    1000, 2000, 4000, 8000, 16000
+                )
+
+                for (i in frequencies.indices) {
+                    audioEngine.setBandAtFrequency(
+                        frequencies[i],
+                        values[i]
+                    )
+                }
+            }
+        }
+    }
+
+    parent.addView(button)
+}
 }
 
 private lateinit var audioEngine: AudioEngine
