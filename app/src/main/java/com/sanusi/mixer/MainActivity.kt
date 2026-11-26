@@ -151,8 +151,47 @@ bassSlider.setOnSeekBarChangeListener(
 
 content.addView(bassSlider)
         addButton(content, "TREBLE")
-        addButton(content, "VIRTUALIZER")
-        addButton(content, "REVERB")
+        
+addLabel(content, "VIRTUALIZER")
+
+val virtualSlider = SeekBar(this).apply {
+    max = 100
+    progress = 0
+}
+
+virtualSlider.setOnSeekBarChangeListener(
+    object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(
+            bar: SeekBar?,
+            value: Int,
+            user: Boolean
+        ) {
+            if (user && eqPower) {
+                audioEngine.setVirtualizer(value)
+            }
+        }
+
+        override fun onStartTrackingTouch(bar: SeekBar?) {}
+        override fun onStopTrackingTouch(bar: SeekBar?) {}
+    }
+)
+
+content.addView(virtualSlider)
+
+addLabel(content, "REVERB")
+
+val reverbSwitch = Switch(this).apply {
+    text = "Aktifkan Reverb"
+    setTextColor(Color.WHITE)
+    setOnCheckedChangeListener { _, checked ->
+        if (eqPower) {
+            audioEngine.setReverb(checked)
+        }
+    }
+}
+
+content.addView(reverbSwitch)
+
 
         addLabel(content, "SOUND PRESETS")
 
