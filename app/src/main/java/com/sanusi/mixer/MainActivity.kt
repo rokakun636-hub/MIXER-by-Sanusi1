@@ -42,7 +42,23 @@ class MainActivity : Activity() {
 
         addLabel(content, "PROFESSIONAL AUDIO EQUALIZER")
 
-        addButton(content, "POWER  ON")
+        val powerButton = Button(this).apply {
+    text = "POWER ON"
+    textSize = 16f
+    setTextColor(green)
+    setBackgroundColor(Color.rgb(35, 42, 38))
+
+    setOnClickListener {
+        eqPower = !eqPower
+        audioEngine.setPower(eqPower)
+        text = if (eqPower) "POWER ON" else "POWER OFF"
+        setTextColor(
+            if (eqPower) green else Color.GRAY
+        )
+    }
+}
+
+content.addView(powerButton)
         addLabel(content, "10 BAND EQUALIZER")
 
         val bands = listOf(
